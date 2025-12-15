@@ -931,6 +931,7 @@ def build_residuals_full_paper_model(
 
 def build_residuals(
     returns: pd.DataFrame,
+    prices: pd.DataFrame,
     factor_model_type: str,
     window_corr_days: int,
     pca_explained_var: float,
@@ -939,7 +940,7 @@ def build_residuals(
 ) -> Tuple[Dict[str, pd.Series], Dict]:
     if factor_model_type == "PCA":
         residuals_df, eigvals, eigvecs = build_residuals_pca(
-            prices=returns,
+            prices=prices,
             tickers=user_tickers,
             pca_lookback=window_corr_days
         )
@@ -1802,7 +1803,8 @@ if st.session_state["run_backtest"]:
                 returns = compute_returns(prices)
                 try:
                     residuals, meta = build_residuals(
-                        returns,
+                        returns=returns,
+                        prices=prices,
                         factor_model_type=factor_model_type,
                         window_corr_days=window_corr_days,
                         pca_explained_var=pca_explained_var,
